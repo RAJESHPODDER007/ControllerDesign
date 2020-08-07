@@ -52,23 +52,23 @@ public class EventController {
     }
 
     @GetMapping(value = GET_EVENT)
-    public @ResponseBody ResponseEntity<Response<Event>> getEvent(@RequestParam("subscription_id") String subscription_id,
+    public @ResponseBody ResponseEntity<Response<Event>> getEvent(@RequestParam("person_id") String person_id,
                                                                         @RequestHeader(name = OS_DETAILS) String osDetails) {
         Response successResponse = null;
         Response errorResponse = null;
         if (eventService.getEvents().size() != 0) {
-            List<Event> eventList=eventService.getEvents().stream().filter(e->e.getSubscription_id().equals(subscription_id)).collect(Collectors.toList());
-            if(eventList.size()!=0 && (subscription_id!=null || subscription_id.trim()!="") ) {
+            List<Event> eventList=eventService.getEvents().stream().filter(e->e.getPerson_id().equals(person_id)).collect(Collectors.toList());
+            if(eventList.size()!=0 && (person_id!=null || person_id.trim()!="") ) {
                 successResponse = new Response(StatusCode.SUCCESS.toString(), eventList);
                 return new ResponseEntity<>(successResponse, HttpStatus.FOUND);
-            }else if((subscription_id==null || subscription_id.trim()=="")){
+            }else if((person_id==null || person_id.trim()=="")){
                 errorResponse = new Response(StatusCode.ERROR.toString(), ID_BLANK);
                 return new ResponseEntity<>(errorResponse, HttpStatus.EXPECTATION_FAILED);
             } else{
                 errorResponse = new Response(StatusCode.ERROR.toString(), NO_RECORD_MESSAGE);
                 return new ResponseEntity<>(errorResponse, HttpStatus.NOT_FOUND);
             }
-        }else if((subscription_id==null || subscription_id.trim()=="")){
+        }else if((person_id==null || person_id.trim()=="")){
             errorResponse = new Response(StatusCode.ERROR.toString(), ID_BLANK);
             return new ResponseEntity<>(errorResponse, HttpStatus.EXPECTATION_FAILED);
         } else if (eventService.getEvents().size() == 0){
